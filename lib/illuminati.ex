@@ -38,8 +38,8 @@ defmodule Illuminati do
   log its result + elapsed time (in ms).
 
   """
-  defmacro tc(source_code, logger_metadata \\ [], logger_message \\ "", statsd_metric_postfix \\ "")
-  defmacro tc(source_code, logger_metadata, logger_message, statsd_metric_postfix) do
+
+  defmacro tc(source_code, logger_message \\ "", logger_metadata \\ [], statsd_metric_postfix \\ "") do
     quote do
       (
         {elapsed_time_microseconds, result} = :timer.tc(fn() -> unquote(source_code) end)
