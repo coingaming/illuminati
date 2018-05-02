@@ -2,7 +2,7 @@
 
 Utilities for logging and monitoring. Includes Logstash and StatsD applications.
 
-<img src="priv/icon.png" alt="Logo" width="200" style="display: block; margin-left: auto; margin-right: auto;"/>
+<img src="priv/icon.png" alt="Logo" width="200"/>
 
 ## Installation
 
