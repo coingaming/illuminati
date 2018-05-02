@@ -39,7 +39,11 @@ defmodule Illuminati do
 
   """
 
-  defmacro tc(source_code, logger_message \\ "", logger_metadata \\ [], statsd_metric_postfix \\ "") do
+  defmacro tc(source_code,
+              logger_message        \\ "",
+              logger_metadata       \\ [],
+              statsd_options        \\ [],
+              statsd_metric_postfix \\ "") do
     quote do
       (
         {elapsed_time_microseconds, result} = :timer.tc(fn() -> unquote(source_code) end)
@@ -65,7 +69,8 @@ defmodule Illuminati do
 
         _ = ExStatsD.timer(
               elapsed_time_milliseconds,
-              full_statsd_metric)
+              full_statsd_metric,
+              unquote(statsd_options))
 
         result
       )

@@ -1,21 +1,35 @@
 # Illuminati
 
-**TODO: Add description**
+Utilities for logging and monitoring. Includes Logstash and StatsD applications.
+
+![Logo](priv/icon.png)
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `illuminati` to your list of dependencies in `mix.exs`:
+Add `illuminati` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
   [
-    {:illuminati, "~> 0.1.0"}
+    {:illuminati, "heathmont/illuminati"}
   ]
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/illuminati](https://hexdocs.pm/illuminati).
+## Configuration
 
+Logstash and StatsD applications should be configured in your application `config/*.exs` files like this:
+
+```elixir
+config :logger,
+  backends: [
+    :console,
+    {LogstashJson.Console, :json}
+  ]
+
+config :ex_statsd,
+  host: "your.statsd.host.com",
+  port: 1234,
+  namespace: "your-app",
+  tags: ["env:#{Mix.env}"]
+```
