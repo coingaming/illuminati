@@ -23,7 +23,7 @@ defmodule Illuminati.MixProject do
   defp deps do
     [
       {:ex_statsd, github: "timCF/ex_statsd"},
-      {:logstash_json, github: "svetob/logstash-json"},
+      {:logstash_json, "~> 0.7.0", [env: :prod, repo: "hexpm", hex: "logstash_json"]}
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
     ]
