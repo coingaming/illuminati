@@ -61,7 +61,7 @@ defmodule Illuminati do
                               |> String.downcase
         _ = Logger.info(
               String.trim("#{function_fullname} #{unquote(logger_message)}"),
-              Keyword.merge([elapsed_time: elapsed_time_milliseconds, result: IhCore.Utils.simplify_logs(result)], unquote(logger_metadata)))
+              Keyword.merge([elapsed_time: elapsed_time_milliseconds, result: Illuminati.simplify_logs(result)], unquote(logger_metadata)))
 
         _ = ExStatsD.timer(
               elapsed_time_milliseconds,
