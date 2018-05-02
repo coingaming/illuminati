@@ -1,0 +1,3 @@
+%{
+  "ex_statsd": {:git, "https://github.com/timCF/ex_statsd.git", "2fe285fd46d59d7e6b680371f9d37bfbc8f618f6", []},
+}
