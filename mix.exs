@@ -34,6 +34,7 @@ defmodule Illuminati.MixProject do
       # hex.pm stuff
       description:  "Macro utilities for logging and monitoring",
       package: [
+        organization: "coingaming",
         licenses: ["Apache 2.0"],
         files: ["lib", "priv", "mix.exs", "README*", "VERSION*"],
         maintainers: ["timCF"],
