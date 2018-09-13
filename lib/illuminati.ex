@@ -3,7 +3,12 @@ defmodule Illuminati do
   Documentation for Illuminati.
   """
 
-  require Logger
+  defmacro __using__(_) do
+    quote do
+      require Logger
+      require Illuminati
+    end
+  end
 
   @doc """
 
@@ -11,9 +16,8 @@ defmodule Illuminati do
 
   ## Example
 
-    iex> Illuminati.simplify_logs([%{foo: 123}, %{foo: 321}])
-    [%{foo: 123}, "..."]
-
+  iex> Illuminati.simplify_logs([%{foo: 123}, %{foo: 321}])
+  [%{foo: 123}, "..."]
   """
 
   def simplify_logs(struct = %_{}) do
@@ -30,6 +34,24 @@ defmodule Illuminati do
   end
   def simplify_logs([head = %{} | _]), do: [simplify_logs(head), "..."]
   def simplify_logs(list) when is_list(list), do:  Enum.map(list, &simplify_logs/1)
+  def simplify_logs(bin) when is_binary(bin) do
+    bin
+    |> String.valid?
+    |> case do
+      true -> bin
+      false -> inspect(bin)
+    end
+  end
+  def simplify_logs(pid) when is_pid(pid) do
+    pid
+    |> :erlang.pid_to_list
+    |> to_string
+  end
+  def simplify_logs(ref) when is_reference(ref) do
+    ref
+    |> :erlang.ref_to_list
+    |> to_string
+  end
   def simplify_logs(some), do: some
 
   @doc """
@@ -37,15 +59,23 @@ defmodule Illuminati do
   Macro returns result of given block of code and
   log its result + elapsed time (in ms).
 
+  ## Example
+
+  iex> use Illuminati
+  Illuminati
+  iex> (1 + 1) |> Illuminati.tc(:arithmetics, "function plus")
+  2
   """
 
   defmacro tc(source_code,
+              result_label          \\ :result,
               logger_message        \\ "",
               logger_metadata       \\ [],
               statsd_options        \\ [],
               statsd_metric_postfix \\ "") do
     quote do
       (
+
         {elapsed_time_microseconds, result} = :timer.tc(fn() -> unquote(source_code) end)
         elapsed_time_milliseconds = div(elapsed_time_microseconds, 1000)
 
@@ -63,9 +93,15 @@ defmodule Illuminati do
                               |> String.replace(" ", "_")
                               |> String.replace(".", "_")
                               |> String.downcase
+
         _ = Logger.info(
-              String.trim("#{function_fullname} #{unquote(logger_message)}"),
-              Keyword.merge([elapsed_time: elapsed_time_milliseconds, result: Illuminati.simplify_logs(result)], unquote(logger_metadata)))
+              unquote(logger_message),
+              Keyword.merge([
+                  {:elapsed_time, elapsed_time_milliseconds},
+                  {:function_fullname, function_fullname},
+                  {unquote(result_label), Illuminati.simplify_logs(result)}
+                ],
+                unquote(logger_metadata)))
 
         _ = ExStatsD.timer(
               elapsed_time_milliseconds,
