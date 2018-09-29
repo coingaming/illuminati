@@ -58,7 +58,6 @@ defmodule Illuminati.MixProject do
   defp deps do
     [
       {:ex_statsd, "~> 0.5.4", organization: "coingaming"},
-      {:logstash_json, "~> 0.7.0", [env: :prod, repo: "hexpm", hex: "logstash_json"]},
       # development tools
       {:excoveralls, "~> 0.8",            only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 0.5",               only: [:dev, :test], runtime: false},
