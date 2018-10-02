@@ -1,5 +1,8 @@
 # Change Log
 
+## [v1.0.0](https://github.com/coingaming/illuminati/tree/v1.0.0) (2018-09-13)
+[Full Changelog](https://github.com/coingaming/illuminati/compare/v0.1.2...v1.0.0)
+
 ## [v0.1.2](https://github.com/coingaming/illuminati/tree/v0.1.2) (2018-05-15)
 [Full Changelog](https://github.com/coingaming/illuminati/compare/v0.1.1...v0.1.2)
 
