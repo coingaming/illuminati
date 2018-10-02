@@ -72,7 +72,26 @@ defmodule Illuminati do
               logger_message        \\ "",
               logger_metadata       \\ [],
               statsd_options        \\ [],
-              statsd_metric_postfix \\ "") do
+              statsd_metric_postfix \\ "",
+              illuminati_opts       \\ [simplify_logs: false]) do
+
+    {opts, []} =
+      illuminati_opts
+      |> Code.eval_quoted([], __CALLER__)
+
+    logged_result =
+      opts
+      |> case do
+        [simplify_logs: true] ->
+          quote do
+            Illuminati.simplify_logs(result)
+          end
+        [simplify_logs: false] ->
+          quote do
+            result
+          end
+      end
+
     quote do
       (
 
@@ -99,7 +118,7 @@ defmodule Illuminati do
               Keyword.merge([
                   {:elapsed_time, elapsed_time_milliseconds},
                   {:function_fullname, function_fullname},
-                  {unquote(result_label), Illuminati.simplify_logs(result)}
+                  {unquote(result_label), unquote(logged_result)}
                 ],
                 unquote(logger_metadata)))
 

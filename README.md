@@ -1,6 +1,6 @@
 # Illuminati
 
-Utilities for logging and monitoring. Includes Logstash and StatsD applications.
+Utilities for logging and monitoring. Useful with Logstash and StatsD applications.
 
 <img src="priv/icon.png" alt="Logo" width="200"/>
 
@@ -11,7 +11,7 @@ Add `illuminati` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:illuminati, "heathmont/illuminati"}
+    {:illuminati, "~> X.X.X", organization: "coingaming"},
   ]
 end
 ```
@@ -42,7 +42,7 @@ Add on top of the file
 use Illuminati
 ```
 
-and use **&Illuminati.tc/6** macro to log result and elapsed time for any expression
+and use **&Illuminati.tc/7** macro to log result and elapsed time for any expression
 
 ```elixir
 (
@@ -58,10 +58,11 @@ and use **&Illuminati.tc/6** macro to log result and elapsed time for any expres
                  logger_message,
                  logger_metadata,
                  statsd_options,
-                 statsd_metric_postfix)
+                 statsd_metric_postfix,
+                 illuminati_opts)
 ```
 
-also **&Illuminati.tc/6** macro provides default values
+also **&Illuminati.tc/7** macro provides default values
 
 ```elixir
 defmacro tc(source_code,
@@ -69,5 +70,6 @@ defmacro tc(source_code,
             logger_message        \\ "",
             logger_metadata       \\ [],
             statsd_options        \\ [],
-            statsd_metric_postfix \\ "")
+            statsd_metric_postfix \\ "",
+            illuminati_opts       \\ [simplify_logs: false])
 ```
