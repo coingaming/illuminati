@@ -73,23 +73,32 @@ defmodule Illuminati do
               logger_metadata       \\ [],
               statsd_options        \\ [],
               statsd_metric_postfix \\ "",
-              illuminati_opts       \\ [simplify_logs: false]) do
+              illuminati_opts       \\ [simplify_logs: false, logger_level: :info]) do
 
     {opts, []} =
       illuminati_opts
       |> Code.eval_quoted([], __CALLER__)
 
     logged_result =
-      opts
+      opts[:simplify_logs]
       |> case do
-        [simplify_logs: true] ->
+        true ->
           quote do
             Illuminati.simplify_logs(result)
           end
-        [simplify_logs: false] ->
+        negative when (negative in [false, nil]) ->
           quote do
             result
           end
+        some ->
+          raise("wrong :simplify_logs parameter #{inspect some}")
+      end
+
+    logger_level =
+      opts[:logger_level]
+      |> case do
+        level when (level in [:debug, :warn, :info, :error]) -> level
+        some -> raise("wrong :logger_level parameter #{inspect some}")
       end
 
     quote do
@@ -113,7 +122,7 @@ defmodule Illuminati do
                               |> String.replace(".", "_")
                               |> String.downcase
 
-        _ = Logger.info(
+        _ = Logger.unquote(logger_level)(
               unquote(logger_message),
               Keyword.merge([
                   {:elapsed_time, elapsed_time_milliseconds},
