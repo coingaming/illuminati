@@ -1,5 +1,15 @@
 # Change Log
 
+## [v1.0.2](https://github.com/coingaming/illuminati/tree/v1.0.2) (2018-10-03)
+[Full Changelog](https://github.com/coingaming/illuminati/compare/v1.0.1...v1.0.2)
+
+**Closed issues:**
+
+- update readme [\#1](https://github.com/coingaming/illuminati/issues/1)
+
+## [v1.0.1](https://github.com/coingaming/illuminati/tree/v1.0.1) (2018-10-02)
+[Full Changelog](https://github.com/coingaming/illuminati/compare/v1.0.0...v1.0.1)
+
 ## [v1.0.0](https://github.com/coingaming/illuminati/tree/v1.0.0) (2018-09-13)
 [Full Changelog](https://github.com/coingaming/illuminati/compare/v0.1.2...v1.0.0)
 
