@@ -75,12 +75,8 @@ defmodule Illuminati do
               statsd_metric_postfix \\ "",
               illuminati_opts       \\ [simplify_logs: false, logger_level: :info]) do
 
-    {opts, []} =
-      illuminati_opts
-      |> Code.eval_quoted([], __CALLER__)
-
     logged_result =
-      opts[:simplify_logs]
+      illuminati_opts[:simplify_logs]
       |> case do
         true ->
           quote do
@@ -90,15 +86,32 @@ defmodule Illuminati do
           quote do
             result
           end
-        some ->
-          raise("wrong :simplify_logs parameter #{inspect some}")
+        dynamic ->
+          quote do
+            unquote(dynamic)
+            |> case do
+              true -> Illuminati.simplify_logs(result)
+              negative when (negative in [false, nil]) -> result
+              some -> raise("wrong dynamic :simplify_logs Illuminati option #{inspect some}")
+            end
+          end
       end
 
     logger_level =
-      opts[:logger_level]
+      illuminati_opts[:logger_level]
       |> case do
-        level when (level in [:debug, :warn, :info, :error]) -> level
-        some -> raise("wrong :logger_level parameter #{inspect some}")
+        nil ->
+          quote do
+            :info
+          end
+        dynamic ->
+          quote do
+            unquote(dynamic)
+            |> case do
+              level when (level in [:debug, :warn, :info, :error]) -> level
+              some -> raise("wrong dynamic :logger_level Illuminati option #{inspect some}")
+            end
+          end
       end
 
     quote do
@@ -122,7 +135,8 @@ defmodule Illuminati do
                               |> String.replace(".", "_")
                               |> String.downcase
 
-        _ = Logger.unquote(logger_level)(
+        _ = Logger.log(
+              unquote(logger_level),
               unquote(logger_message),
               Keyword.merge([
                   {:elapsed_time, elapsed_time_milliseconds},
